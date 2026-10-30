@@ -50,14 +50,14 @@ export default function UploadZone({ onFileSelect, isLoading, error, onErrorDism
   return (
     <div className="flex flex-col gap-4 w-full select-none">
       {error && (
-        <div className="w-full border border-accent-coral/60 bg-[#1A0000] p-4 rounded-[4px] font-mono text-[12px] text-accent-coral flex items-center justify-between">
+        <div className="w-full border border-accent-coral/60 bg-alarm-soft p-4 rounded-[4px] font-mono text-[12px] text-accent-coral flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span>⚠</span>
             <span>{error}</span>
           </div>
           <button
             onClick={onErrorDismiss}
-            className="text-accent-coral hover:text-white transition-colors duration-150 font-bold uppercase tracking-wider text-[10px]"
+            className="text-accent-coral hover:text-alarm transition-colors duration-150 font-bold uppercase tracking-wider text-[10px]"
           >
             DISMISS
           </button>
@@ -71,8 +71,8 @@ export default function UploadZone({ onFileSelect, isLoading, error, onErrorDism
         onClick={handleClick}
         className={`group border-2 rounded-[4px] p-12 flex flex-col items-center justify-center gap-4 text-center cursor-pointer transition-all duration-300 min-h-[220px] ${
           isDragging
-            ? "border-solid border-accent-cyan bg-accent-cyan/5 shadow-[0_0_15px_rgba(0,212,255,0.1)]"
-            : "border-dashed border-terminal-border bg-terminal-card hover:border-accent-cyan hover:shadow-[0_0_12px_rgba(0,212,255,0.08)]"
+            ? "border-solid border-ink bg-sun-soft "
+            : "border-dashed border-terminal-border bg-terminal-card hover:border-ink hover:bg-sun hover:"
         } ${isLoading ? "opacity-40 cursor-not-allowed" : ""}`}
       >
         {/* Hidden file input */}
@@ -87,7 +87,7 @@ export default function UploadZone({ onFileSelect, isLoading, error, onErrorDism
 
         {/* Grid/CSV Icon */}
         <svg 
-          className="w-12 h-12 text-muted-text group-hover:text-accent-cyan transition-colors duration-300" 
+          className="w-12 h-12 text-muted-text group-hover:text-alarm transition-colors duration-300" 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24" 
@@ -102,7 +102,7 @@ export default function UploadZone({ onFileSelect, isLoading, error, onErrorDism
         </svg>
 
         {/* Primary text */}
-        <p className="font-mono text-[13px] font-bold text-white uppercase tracking-wider group-hover:text-accent-cyan transition-colors duration-300">
+        <p className="font-mono text-[13px] font-bold text-ink uppercase tracking-wider group-hover:text-alarm transition-colors duration-300">
           Drop CSV here or click to upload
         </p>
 

@@ -29,7 +29,7 @@ export default function TrustScoreCircle({ score }: TrustScoreCircleProps) {
             cy="48"
             r={radius}
             fill="transparent"
-            stroke="#1E1E2E"
+            stroke="#EDEDED"
             strokeWidth={strokeWidth}
           />
           {/* Progress circle */}
@@ -38,19 +38,19 @@ export default function TrustScoreCircle({ score }: TrustScoreCircleProps) {
             cy="48"
             r={radius}
             fill="transparent"
-            stroke="#00D4FF"
+            stroke="#FFD400"
             strokeWidth={strokeWidth}
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
             style={{ 
               transition: 'stroke-dashoffset 800ms cubic-bezier(0.16, 1, 0.3, 1)',
-              filter: 'drop-shadow(0 0 3px rgba(0, 212, 255, 0.4))'
+              filter: 'drop-shadow(0 0 3px rgba(10,10,10,0.15))'
             }}
           />
         </svg>
         <div className="absolute flex flex-col items-center">
-          <span className="text-[20px] font-bold text-white tracking-tighter leading-none">
+          <span className="text-[20px] font-bold text-ink tracking-tighter leading-none">
             {score.toFixed(2)}
           </span>
           <span className="text-[9px] text-muted-text mt-0.5 font-mono">0.0 - 1.0</span>

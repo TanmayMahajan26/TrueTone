@@ -15,10 +15,12 @@ export default function SentimentChart({ positive, negative }: SentimentChartPro
     { name: "NEGATIVE", value: negative },
   ];
 
-  const COLORS = ["#39FF14", "#FF4757"];
+  const COLORS = ["#0A0A0A", "#E10600"];
 
   return (
     <div className="relative w-full h-[300px] flex items-center justify-center font-mono">
+      {/* Absolute wrapper gives the chart a real size; as a flex child it measured ~0 wide. */}
+      <div className="absolute inset-0">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -29,7 +31,7 @@ export default function SentimentChart({ positive, negative }: SentimentChartPro
             outerRadius={85}
             paddingAngle={4}
             dataKey="value"
-            stroke="#111118"
+            stroke="#FFFFFF"
             strokeWidth={2}
           >
             {data.map((entry, index) => (
@@ -42,10 +44,11 @@ export default function SentimentChart({ positive, negative }: SentimentChartPro
           </Pie>
         </PieChart>
       </ResponsiveContainer>
+      </div>
 
       {/* Center label: total count in mono */}
       <div className="absolute flex flex-col items-center justify-center select-none pointer-events-none">
-        <span className="text-[28px] font-bold text-white tracking-tighter leading-none">
+        <span className="text-[28px] font-bold text-ink tracking-tighter leading-none">
           {total}
         </span>
         <span className="text-[9px] text-muted-text uppercase tracking-widest mt-1">TOTAL</span>

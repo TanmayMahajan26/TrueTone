@@ -12,6 +12,8 @@ import FlagsList from '../../components/FlagsList';
 import TrustScoreCircle from '../../components/TrustScoreCircle';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
 import ExampleChips from '../../components/ExampleChips';
+import WordHighlights from '../../components/WordHighlights';
+import ModelComparison from '../../components/ModelComparison';
 
 export default function AnalyzerPage() {
   const [review, setReview] = useState("");
@@ -19,6 +21,7 @@ export default function AnalyzerPage() {
   const [models, setModels] = useState<ModelInfo[]>(FALLBACK_MODELS);
   const [isLoading, setIsLoading] = useState(false);
   const [prediction, setPrediction] = useState<PredictResponse | null>(null);
+  const [comparison, setComparison] = useState<Partial<Record<ModelId, PredictResponse>>>({});
   const [error, setError] = useState<string | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [activeStep, setActiveStep] = useState<number>(-1);
@@ -71,17 +74,36 @@ export default function AnalyzerPage() {
     setIsLoading(true);
     setError(null);
     setPrediction(null);
+    setComparison({});
     setShowResults(false);
+
+    // The other models run alongside for the comparison panel; a failure there
+    // only hides that row, it never blocks the main result.
+    const otherModels = models.filter((m) => m.id !== selectedModel);
+    const otherResults = Promise.all(
+      otherModels.map((m) =>
+        analyzeReview(trimmed, m.id).then(
+          (r) => [m.id, r] as const,
+          () => null
+        )
+      )
+    );
 
     try {
       const result = await analyzeReview(trimmed, selectedModel);
+      const others = await otherResults;
+      const byModel: Partial<Record<ModelId, PredictResponse>> = { [selectedModel]: result };
+      for (const entry of others) {
+        if (entry) byModel[entry[0]] = entry[1];
+      }
       setPrediction(result);
+      setComparison(byModel);
     } catch (err: any) {
       setError(err.message || "Failed to analyze review");
     } finally {
       setIsLoading(false);
     }
-  }, [review, selectedModel]);
+  }, [review, selectedModel, models]);
 
   const handleExampleClick = useCallback((example: string) => {
     setReview(example);
@@ -102,11 +124,11 @@ export default function AnalyzerPage() {
       <div className="w-full max-w-6xl flex flex-col md:flex-row gap-8 items-stretch">
         
         {/* Left 45%: Input Panel */}
-        <div className="w-full md:w-[45%] flex flex-col justify-between bg-terminal-card border border-terminal-border p-6 rounded-[3px] relative hover-border-transition transition-all duration-300">
+        <div className="w-full md:w-[45%] flex flex-col justify-between bg-terminal-card border-2 border-ink shadow-[4px_4px_0_0_#0A0A0A] p-6 rounded-[3px] relative hover-border-transition transition-all duration-300">
           <div className="flex flex-col gap-6">
             {/* Wordmark */}
-            <div className="font-mono text-[13px] font-bold tracking-[0.2em] text-white uppercase">
-              ReviewLens AI // ANALYZER
+            <div className="font-sans text-[22px] font-bold tracking-tight text-ink">
+              Analyze a review<span className="text-alarm">.</span>
             </div>
 
             {/* Model Selector Pills */}
@@ -120,10 +142,10 @@ export default function AnalyzerPage() {
                     title={name}
                     onClick={() => setSelectedModel(m)}
                     disabled={isLoading}
-                    className={`flex-1 py-2 font-mono text-[11px] font-bold uppercase tracking-wider rounded-[3px] border transition-all duration-200 cursor-pointer ${
+                    className={`flex-1 py-2 font-mono text-[11px] font-bold uppercase tracking-wider border-2 transition-all duration-200 cursor-pointer ${
                       selectedModel === m
-                        ? "border-accent-cyan text-accent-cyan bg-accent-cyan/10"
-                        : "border-terminal-border bg-terminal-border text-muted-text hover:text-white"
+                        ? "border-ink text-ink bg-sun"
+                        : "border-ink bg-paper text-ink hover:bg-sun-soft"
                     }`}
                   >
                     {m === "lr" ? "LR" : m === "nb" ? "NB" : "Transformer"}
@@ -134,7 +156,7 @@ export default function AnalyzerPage() {
 
             {/* Textarea */}
             <div className="flex flex-col gap-2">
-              <span className="font-mono text-[10px] text-muted-text uppercase tracking-widest">Input Text</span>
+              <span className="font-mono text-[10px] text-muted-text uppercase tracking-widest">Your review</span>
               <textarea
                 value={review}
                 onChange={(e) => {
@@ -142,20 +164,20 @@ export default function AnalyzerPage() {
                   if (error) setError(null);
                 }}
                 disabled={isLoading}
-                placeholder="paste a product review..."
-                className="w-full min-h-[160px] bg-[#0D0D14] border-l-2 border-accent-cyan/80 border-y-0 border-r-0 p-4 font-mono text-[14px] text-body-text placeholder-muted-text focus:outline-none focus:bg-[#0E0E18] disabled:opacity-50 resize-none"
+                placeholder="Paste a product review here, or pick an example below..."
+                className="w-full min-h-[160px] bg-[#F7F7F5] border-2 border-ink p-4 font-sans text-[15px] text-body-text placeholder-muted-text focus:outline-none focus:bg-sun-soft/40 disabled:opacity-50 resize-none"
               />
             </div>
 
             {/* Example Chips */}
             <div className="flex flex-col gap-2">
-              <span className="font-mono text-[10px] text-muted-text uppercase tracking-widest">Quick Templates</span>
+              <span className="font-mono text-[10px] text-muted-text uppercase tracking-widest">Try an example</span>
               <ExampleChips onChipClick={handleExampleClick} />
             </div>
 
             {/* AI Neural Pipeline Map */}
-            <div className="border border-terminal-border/40 bg-[#0A0A0F]/50 p-4 rounded-[3px] flex flex-col gap-3 font-mono">
-              <span className="text-[9px] text-muted-text uppercase tracking-widest">Neural Pipeline Signals</span>
+            <div className="border border-terminal-border/40 bg-[#F7F7F5] p-4 rounded-[3px] flex flex-col gap-3 font-mono">
+              <span className="text-[9px] text-muted-text uppercase tracking-widest">What happens when you click analyze</span>
               <div className="grid grid-cols-4 gap-1 relative">
                 {steps.map((st, i) => {
                   const isActive = activeStep >= i;
@@ -165,14 +187,14 @@ export default function AnalyzerPage() {
                       key={i} 
                       className={`flex flex-col items-center text-center p-1.5 border rounded-[3px] transition-all duration-300 ${
                         isCurrent 
-                          ? "border-accent-cyan bg-accent-cyan/10 text-accent-cyan" 
+                          ? "border-ink bg-sun text-ink" 
                           : isActive 
-                            ? "border-accent-green/40 bg-accent-green/5 text-accent-green" 
-                            : "border-terminal-border text-muted-text/40"
+                            ? "border-ink bg-ink text-sun" 
+                            : "border-ink/20 text-muted-text"
                       }`}
                     >
                       <span className="text-[10px] font-bold tracking-tight">{st.label}</span>
-                      <span className="text-[7px] text-muted-text/80 hidden sm:block mt-0.5">{st.desc}</span>
+                      <span className="text-[8px] opacity-80 hidden sm:block mt-0.5">{st.desc}</span>
                     </div>
                   );
                 })}
@@ -184,14 +206,14 @@ export default function AnalyzerPage() {
           <button
             onClick={handleAnalyze}
             disabled={review.trim().length < 10 || isLoading}
-            className="w-full h-12 bg-white text-black font-mono text-[12px] font-bold uppercase tracking-[0.15em] rounded-[3px] mt-6 transition-colors hover:bg-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            className="w-full h-12 bg-ink text-sun border-2 border-ink font-sans text-[15px] font-bold tracking-wide mt-6 transition-colors hover:bg-alarm hover:text-paper disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
           >
-            {isLoading ? "ANALYZING..." : "ANALYZE"}
+            {isLoading ? "Analyzing…" : "Analyze review →"}
           </button>
         </div>
 
         {/* Right 55%: Results Panel */}
-        <div className="w-full md:w-[55%] flex flex-col justify-center bg-terminal-card border border-terminal-border p-6 rounded-[3px] min-h-[420px] relative hover-border-transition transition-all duration-300">
+        <div className="w-full md:w-[55%] flex flex-col justify-center bg-terminal-card border-2 border-ink shadow-[4px_4px_0_0_#0A0A0A] p-6 rounded-[3px] min-h-[420px] relative hover-border-transition transition-all duration-300">
           
           {isLoading && (
             <div className="absolute inset-0 p-6 bg-terminal-card z-10">
@@ -200,7 +222,7 @@ export default function AnalyzerPage() {
           )}
 
           {error && (
-            <div className="w-full border border-accent-coral/60 bg-[#1A0000] p-4 rounded-[3px] font-mono text-[12px] text-accent-coral flex items-start gap-2 select-text">
+            <div className="w-full border-2 border-alarm bg-alarm-soft p-4 font-mono text-[12px] text-accent-coral flex items-start gap-2 select-text">
               <span>⚠</span>
               <span>{error}</span>
             </div>
@@ -209,10 +231,10 @@ export default function AnalyzerPage() {
           {!prediction && !isLoading && !error && (
             <div className="flex flex-col items-center justify-center text-center p-8">
               <div className="font-mono text-[12px] text-muted-text uppercase tracking-widest">
-                System Idle // Awaiting Input Signal
+                Results will appear here
               </div>
               <div className="font-mono text-[11px] text-muted-text/60 mt-2">
-                Paste a review and select a model to generate analysis.
+                Paste a review or pick an example, then press Analyze.
               </div>
             </div>
           )}
@@ -250,6 +272,20 @@ export default function AnalyzerPage() {
                 <span className="font-mono text-[10px] text-muted-text uppercase tracking-widest">RELIABILITY FLAGS</span>
                 <FlagsList flags={prediction.flags} />
               </div>
+
+              {/* Why this verdict */}
+              <div className="flex flex-col gap-2 border-t border-terminal-border/40 pt-4">
+                <span className="font-mono text-[10px] text-muted-text uppercase tracking-widest">WHY THIS VERDICT</span>
+                <WordHighlights explanation={prediction.explanation} />
+              </div>
+
+              {/* Model comparison */}
+              {Object.keys(comparison).length > 1 && (
+                <div className="flex flex-col gap-2 border-t border-terminal-border/40 pt-4">
+                  <span className="font-mono text-[10px] text-muted-text uppercase tracking-widest">SAME REVIEW, EVERY MODEL</span>
+                  <ModelComparison models={models} results={comparison} selectedModel={selectedModel} />
+                </div>
+              )}
             </div>
           )}
         </div>

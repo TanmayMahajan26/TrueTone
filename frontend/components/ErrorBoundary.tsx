@@ -41,11 +41,11 @@ class ErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-          <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 flex flex-col items-center gap-6 border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+          <div className="max-w-md w-full bg-white border-2 border-ink shadow-[4px_4px_0_0_#0A0A0A] p-8 flex flex-col items-center gap-6 border border-gray-200">
+            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-red-100">
               <svg
-                className="w-8 h-8 text-red-600 dark:text-red-400"
+                className="w-8 h-8 text-red-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -60,16 +60,16 @@ class ErrorBoundary extends React.Component<
               </svg>
             </div>
             <div className="text-center">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              <h2 className="text-xl font-bold text-gray-900 mb-2">
                 Something went wrong
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
+              <p className="text-gray-600 text-sm">
                 An unexpected error occurred. Please try reloading the page.
               </p>
             </div>
             <button
               onClick={this.handleReload}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full bg-ink hover:bg-alarm text-ink font-semibold py-2 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-sun focus:ring-offset-2"
             >
               Try Again
             </button>

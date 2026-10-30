@@ -21,6 +21,24 @@ async def test_batch_endpoint_happy_path(api_client):
     assert payload["skipped"] == 0
     assert set(payload["sentiment_distribution"].keys()) == {"positive", "negative"}
     assert set(payload["reliability_breakdown"].keys()) == {"HIGH", "MEDIUM", "LOW"}
+    assert [row["row"] for row in payload["results"]] == [1, 2]
+    assert payload["results"][1]["review"] == "Terrible mic quality."
+    assert payload["results"][1]["sentiment"] == 0
+
+
+@pytest.mark.anyio
+async def test_batch_results_keep_original_row_numbers_when_rows_are_skipped(api_client):
+    csv_bytes = b'reviewText\nGreat sound.\n""\nAwful battery.\n'
+
+    response = await api_client.post(
+        "/batch",
+        files={"file": ("reviews.csv", csv_bytes, "text/csv")},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["skipped"] == 1
+    assert [row["row"] for row in payload["results"]] == [1, 3]
 
 
 @pytest.mark.anyio

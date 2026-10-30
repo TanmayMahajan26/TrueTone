@@ -21,7 +21,7 @@ export default function FailureTypesChart({ failureTypes }: FailureTypesChartPro
     .sort((a, b) => b.value - a.value);
 
   // 5 distinct colors: blue, orange, green, purple, red
-  const COLORS = ["#3b82f6", "#f97316", "#10b981", "#8b5cf6", "#ef4444"];
+  const COLORS = ["#0A0A0A", "#E10600", "#FFD400", "#8A8A8A", "#FF8A80"];
 
   return (
     <div style={{ width: "100%", height: 300 }}>

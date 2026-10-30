@@ -18,9 +18,9 @@ interface ReliabilityChartProps {
 
 export default function ReliabilityChart({ high, medium, low }: ReliabilityChartProps) {
   const data = [
-    { name: "HIGH", value: Math.round(high), color: "#39FF14" },
-    { name: "MEDIUM", value: Math.round(medium), color: "#FFB800" },
-    { name: "LOW", value: Math.round(low), color: "#FF4757" },
+    { name: "HIGH", value: Math.round(high), color: "#0A0A0A" },
+    { name: "MEDIUM", value: Math.round(medium), color: "#FFD400" },
+    { name: "LOW", value: Math.round(low), color: "#E10600" },
   ];
 
   return (
@@ -36,7 +36,7 @@ export default function ReliabilityChart({ high, medium, low }: ReliabilityChart
             type="category" 
             axisLine={false} 
             tickLine={false} 
-            stroke="#5A5A72"
+            stroke="#0A0A0A"
             width={60}
             tick={{ fontFamily: 'var(--font-ibm-plex-mono), monospace', fontWeight: 'bold' }}
           />
@@ -52,7 +52,7 @@ export default function ReliabilityChart({ high, medium, low }: ReliabilityChart
             radius={[0, 2, 2, 0]}
             label={{ 
               position: 'right', 
-              fill: '#C8C8D4', 
+              fill: '#0A0A0A', 
               formatter: (val: any) => ` ${val}%`,
               fontSize: 11,
               fontFamily: 'var(--font-ibm-plex-mono), monospace',

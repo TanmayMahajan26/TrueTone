@@ -93,15 +93,18 @@ async def batch_predict(
     skipped = 0
 
     valid_reviews: list[str] = []
-    for raw_review in dataframe["reviewText"]:
+    valid_rows: list[int] = []
+    for row_number, raw_review in enumerate(dataframe["reviewText"], start=1):
         if not isinstance(raw_review, str) or not raw_review.strip():
             skipped += 1
             continue
         valid_reviews.append(raw_review)
+        valid_rows.append(row_number)
+    row_results: list[dict[str, object]] = []
 
     sentiment_results = await run_in_threadpool(predictor.predict_reviews, valid_reviews, model)
 
-    for raw_review, sentiment_result in zip(valid_reviews, sentiment_results):
+    for row_number, raw_review, sentiment_result in zip(valid_rows, valid_reviews, sentiment_results):
         trust_result = trust_analyzer.calculate_trust_score(raw_review)
         confidence = float(sentiment_result["confidence"])
         trust_score = float(trust_result["score"])
@@ -114,6 +117,19 @@ async def batch_predict(
 
         if "suspicious_review" in trust_result["flags"] or trust_score < 0.5:
             suspicious_count += 1
+
+        flags = list(dict.fromkeys(list(sentiment_result["flags"]) + list(trust_result["flags"])))
+        row_results.append(
+            {
+                "row": row_number,
+                "review": raw_review,
+                "sentiment": int(sentiment_result["sentiment"]),
+                "confidence": round(confidence, 4),
+                "reliability": str(sentiment_result["reliability"]),
+                "trust_score": round(trust_score, 4),
+                "flags": flags,
+            }
+        )
 
         processed_reviews.append(
             {
@@ -156,4 +172,5 @@ async def batch_predict(
         suspicious_count=suspicious_count,
         reliability_breakdown=reliability_breakdown,
         model_used=model,
+        results=row_results,
     )

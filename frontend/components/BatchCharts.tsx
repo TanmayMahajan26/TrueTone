@@ -27,7 +27,7 @@ export default function BatchCharts({ results }: BatchChartsProps) {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 select-none">
       
       {/* Sentiment Chart Card */}
-      <div className="bg-terminal-card border border-terminal-border p-6 rounded-[4px] flex flex-col glow-border-hover transition-all duration-300">
+      <div className="bg-terminal-card border-2 border-ink shadow-[4px_4px_0_0_#0A0A0A] p-6 rounded-[4px] flex flex-col glow-border-hover transition-all duration-300">
         <span className="font-mono text-[11px] text-muted-text uppercase tracking-widest border-b border-terminal-border/40 pb-3 mb-4">
           Sentiment Distribution
         </span>
@@ -35,7 +35,7 @@ export default function BatchCharts({ results }: BatchChartsProps) {
       </div>
 
       {/* Reliability Breakdown Card */}
-      <div className="bg-terminal-card border border-terminal-border p-6 rounded-[4px] flex flex-col glow-border-hover transition-all duration-300 justify-between">
+      <div className="bg-terminal-card border-2 border-ink shadow-[4px_4px_0_0_#0A0A0A] p-6 rounded-[4px] flex flex-col glow-border-hover transition-all duration-300 justify-between">
         <span className="font-mono text-[11px] text-muted-text uppercase tracking-widest border-b border-terminal-border/40 pb-3 mb-4">
           Reliability Breakdown
         </span>

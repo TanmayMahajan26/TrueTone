@@ -48,18 +48,18 @@ export default function ModelTable({ models }: ModelTableProps) {
                 key={model.key} 
                 className={`text-[12px] border-b border-terminal-border last:border-0 transition-colors duration-150 ${
                   isLR 
-                    ? "bg-[rgba(0,212,255,0.035)] border-l-2 border-l-accent-cyan" 
+                    ? "bg-[rgba(255,212,0,0.18)] border-l-2 border-l-sun" 
                     : "hover:bg-terminal-border/10 border-l-2 border-l-transparent"
                 }`}
               >
-                <td className="px-5 py-3.5 font-bold text-white uppercase">{model.name}</td>
+                <td className="px-5 py-3.5 font-bold text-ink uppercase">{model.name}</td>
                 <td className="px-5 py-3.5 text-right text-body-text">{model.accuracy.toFixed(4)}</td>
                 <td className="px-5 py-3.5 text-right text-body-text">{model.f1.toFixed(4)}</td>
                 <td className="px-5 py-3.5 text-right text-body-text">{model.precision.toFixed(4)}</td>
                 <td className="px-5 py-3.5 text-right text-body-text">{model.recall.toFixed(4)}</td>
                 <td className="px-5 py-3.5 text-center">
                   {model.is_default ? (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[9px] font-bold bg-[rgba(57,255,20,0.15)] text-accent-green border border-[rgba(57,255,20,0.3)] select-none">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[9px] font-bold bg-[rgba(10,10,10,0.15)] text-accent-green border border-[rgba(10,10,10,0.3)] select-none">
                       ✔ RECOMMENDED
                     </span>
                   ) : (

@@ -7,9 +7,9 @@ interface StatCardProps {
 
 export default function StatCard({ title, value }: StatCardProps) {
   return (
-    <div className="bg-terminal-card border border-terminal-border p-6 rounded-[3px] relative overflow-hidden flex flex-col justify-end min-h-[96px] select-none hover-border-transition transition-all duration-200">
+    <div className="bg-terminal-card border-2 border-ink shadow-[4px_4px_0_0_#0A0A0A] p-6 rounded-[3px] relative overflow-hidden flex flex-col justify-end min-h-[96px] select-none hover-border-transition transition-all duration-200">
       {/* Value */}
-      <span className="font-mono text-[30px] font-bold text-white leading-none tracking-tight">
+      <span className="font-mono text-[30px] font-bold text-ink leading-none tracking-tight">
         {value}
       </span>
       

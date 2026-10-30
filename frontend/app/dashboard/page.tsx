@@ -55,22 +55,22 @@ export default function DashboardPage() {
     <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col gap-8 select-none">
       
       {/* Title section */}
-      <div className="flex flex-col gap-1 border-b border-terminal-border/40 pb-4">
-        <div className="font-mono text-[13px] font-bold tracking-[0.2em] text-accent-cyan uppercase glow-text-cyan">
-          SYSTEM_METRICS // DASHBOARD
+      <div className="flex flex-col gap-1 border-b-2 border-ink pb-5">
+        <div className="font-sans text-[30px] font-bold tracking-tight text-ink">
+          Model dashboard<span className="text-alarm">.</span>
         </div>
-        <p className="font-sans text-[12px] text-muted-text uppercase tracking-wider">Model Performance & Dataset Overview</p>
+        <p className="font-sans text-[15px] text-muted-text">How well the models perform, and the data they were trained on.</p>
       </div>
 
       {error && (
-        <div className="w-full border border-accent-coral/60 bg-[#1A0000] p-4 rounded-[4px] font-mono text-[12px] text-accent-coral flex items-center justify-between">
+        <div className="w-full border border-accent-coral/60 bg-alarm-soft p-4 rounded-[4px] font-mono text-[12px] text-accent-coral flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span>⚠</span>
             <span>{error}</span>
           </div>
           <button
             onClick={fetchStats}
-            className="px-3 py-1 bg-accent-coral text-black font-mono text-[10px] font-bold uppercase tracking-wider rounded-[3px] hover:brightness-105"
+            className="px-3 py-1 bg-accent-coral text-white font-mono text-[10px] font-bold uppercase tracking-wider rounded-[3px] hover:brightness-105"
           >
             RETRY
           </button>
@@ -107,7 +107,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-2">
             
             {/* Sentiment Chart Card */}
-            <div className="bg-terminal-card border border-terminal-border p-6 rounded-[4px] flex flex-col glow-border-hover transition-all duration-300">
+            <div className="bg-terminal-card border-2 border-ink shadow-[4px_4px_0_0_#0A0A0A] p-6 rounded-[4px] flex flex-col glow-border-hover transition-all duration-300">
               <span className="font-mono text-[11px] text-muted-text uppercase tracking-widest border-b border-terminal-border/40 pb-3 mb-4">
                 Sentiment Distribution
               </span>
@@ -118,7 +118,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Reliability Breakdown Card */}
-            <div className="bg-terminal-card border border-terminal-border p-6 rounded-[4px] flex flex-col glow-border-hover transition-all duration-300 justify-between">
+            <div className="bg-terminal-card border-2 border-ink shadow-[4px_4px_0_0_#0A0A0A] p-6 rounded-[4px] flex flex-col glow-border-hover transition-all duration-300 justify-between">
               <span className="font-mono text-[11px] text-muted-text uppercase tracking-widest border-b border-terminal-border/40 pb-3 mb-4">
                 Reliability Breakdown
               </span>
@@ -142,7 +142,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Redacted Failure Modes Section */}
-          <div className="bg-terminal-card border border-terminal-border p-6 rounded-[4px] flex flex-col gap-4 mt-2 glow-border-hover transition-all duration-300 select-text">
+          <div className="bg-terminal-card border-2 border-ink shadow-[4px_4px_0_0_#0A0A0A] p-6 rounded-[4px] flex flex-col gap-4 mt-2 glow-border-hover transition-all duration-300 select-text">
             <span className="font-mono text-[11px] text-muted-text uppercase tracking-widest border-b border-terminal-border/40 pb-3">
               MODEL FAILURE MODES
             </span>
@@ -159,9 +159,9 @@ export default function DashboardPage() {
               {failureModes.map((fm, idx) => (
                 <div 
                   key={idx} 
-                  className="grid grid-cols-3 px-4 py-3 border-b border-terminal-border last:border-0 hover:bg-[#1A1A2E]/70 transition-colors duration-150 items-center"
+                  className="grid grid-cols-3 px-4 py-3 border-b border-terminal-border last:border-0 hover:bg-sun-soft transition-colors duration-150 items-center"
                 >
-                  <div className="col-span-1 font-bold text-accent-cyan tracking-wider">
+                  <div className="col-span-1 font-bold text-alarm tracking-wider">
                     {fm.category}
                   </div>
                   <div className="col-span-2 text-body-text italic">

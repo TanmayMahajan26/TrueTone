@@ -18,8 +18,14 @@ async def test_predict_endpoint_happy_path(api_client):
         "trust_score",
         "flags",
         "model_used",
+        "explanation",
     }
     assert payload["model_used"] == "lr"
+    explanation = payload["explanation"]
+    assert "".join(segment["text"] for segment in explanation["segments"]) == (
+        "The battery life is excellent and the sound is clear."
+    )
+    assert any(term["term"] == "excellent" for term in explanation["top_positive"])
     assert isinstance(payload["aspects"], list)
     assert isinstance(payload["flags"], list)
 

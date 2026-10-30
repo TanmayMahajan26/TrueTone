@@ -7,6 +7,16 @@ class BatchReviewItem(BaseModel):
     review: str
     confidence: float
 
+class BatchRowResult(BaseModel):
+    """One analyzed row, used for exporting results."""
+    row: int
+    review: str
+    sentiment: int
+    confidence: float
+    reliability: str
+    trust_score: float
+    flags: List[str]
+
 class BatchResponse(BaseModel):
     total: int
     processed: int
@@ -18,3 +28,4 @@ class BatchResponse(BaseModel):
     suspicious_count: int
     reliability_breakdown: Dict[str, int]
     model_used: str = "lr"
+    results: List[BatchRowResult] = []

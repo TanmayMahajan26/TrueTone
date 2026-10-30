@@ -6,9 +6,9 @@ interface ReliabilityTagProps {
 
 export default function ReliabilityTag({ reliability }: ReliabilityTagProps) {
   const styles = {
-    HIGH: "bg-[rgba(57,255,20,0.15)] text-accent-green border border-[rgba(57,255,20,0.3)]",
-    MEDIUM: "bg-[rgba(255,184,0,0.15)] text-accent-amber border border-[rgba(255,184,0,0.3)]",
-    LOW: "bg-[rgba(255,71,87,0.15)] text-accent-coral border border-[rgba(255,71,87,0.3)]",
+    HIGH: "bg-[rgba(10,10,10,0.15)] text-accent-green border border-[rgba(10,10,10,0.3)]",
+    MEDIUM: "bg-[rgba(255,212,0,0.15)] text-accent-amber border border-[rgba(255,212,0,0.3)]",
+    LOW: "bg-[rgba(225,6,0,0.15)] text-accent-coral border border-[rgba(225,6,0,0.3)]",
   };
 
   return (

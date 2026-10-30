@@ -45,6 +45,27 @@ export interface PredictRequest {
 }
 
 /**
+ * One piece of the original review text and how much it pushed the verdict.
+ * weight > 0 pushes toward positive, < 0 toward negative, scaled to [-1, 1].
+ */
+export interface TokenWeight {
+  text: string;
+  weight: number;
+}
+
+export interface TermWeight {
+  term: string;
+  weight: number;
+}
+
+/** Word-level explanation; only the TF-IDF models provide one. */
+export interface Explanation {
+  segments: TokenWeight[];
+  top_positive: TermWeight[];
+  top_negative: TermWeight[];
+}
+
+/**
  * Response from POST /predict endpoint.
  * Contains overall sentiment, aspects, trust score, and reliability flags.
  */
@@ -56,6 +77,7 @@ export interface PredictResponse {
   trust_score: number;
   flags: string[];
   model_used: ModelId;
+  explanation?: Explanation | null;
 }
 
 /**
@@ -154,4 +176,16 @@ export interface BatchResponse {
   suspicious_count: number;
   reliability_breakdown: Record<string, number>;
   model_used?: string;
+  results?: BatchRowResult[];
+}
+
+/** One analyzed CSV row, used for exporting batch results. */
+export interface BatchRowResult {
+  row: number;
+  review: string;
+  sentiment: 0 | 1;
+  confidence: number;
+  reliability: "HIGH" | "MEDIUM" | "LOW";
+  trust_score: number;
+  flags: string[];
 }

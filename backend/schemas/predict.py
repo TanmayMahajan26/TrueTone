@@ -11,6 +11,19 @@ class AspectSentiment(BaseModel):
     sentiment: int
     confidence: float
 
+class TokenWeight(BaseModel):
+    text: str
+    weight: float = Field(..., description="Push toward positive (>0) or negative (<0), scaled to [-1, 1]")
+
+class TermWeight(BaseModel):
+    term: str
+    weight: float
+
+class Explanation(BaseModel):
+    segments: List[TokenWeight]
+    top_positive: List[TermWeight]
+    top_negative: List[TermWeight]
+
 class PredictResponse(BaseModel):
     model_config = ConfigDict(protected_namespaces=())
 
@@ -21,3 +34,6 @@ class PredictResponse(BaseModel):
     trust_score: float
     flags: List[str]
     model_used: str
+    explanation: Optional[Explanation] = Field(
+        None, description="Per-word contributions; only for the TF-IDF models"
+    )

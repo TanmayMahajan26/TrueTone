@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Request
 from fastapi.concurrency import run_in_threadpool
 
+from ml.explain import explain_review
 from exceptions import EmptyReviewError, ModelNotFoundError
 from schemas.predict import AspectSentiment, PredictRequest, PredictResponse
 
@@ -79,6 +80,8 @@ async def predict(request: Request, body: PredictRequest) -> PredictResponse:
         seen_flags.add(flag)
         deduplicated_flags.append(flag)
 
+    explanation = await run_in_threadpool(explain_review, body.review, loader, body.model)
+
     return PredictResponse(
         sentiment=int(sentiment_result["sentiment"]),
         confidence=float(sentiment_result["confidence"]),
@@ -87,4 +90,5 @@ async def predict(request: Request, body: PredictRequest) -> PredictResponse:
         trust_score=float(trust_result["score"]),
         flags=deduplicated_flags,
         model_used=body.model,
+        explanation=explanation,
     )

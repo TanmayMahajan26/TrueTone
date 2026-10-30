@@ -26,7 +26,7 @@ export default function ConfidenceBar({ confidence, sentiment = 1 }: ConfidenceB
           {percentage}%
         </span>
       </div>
-      <div className="w-full bg-terminal-border h-[4px] rounded-full overflow-hidden">
+      <div className="w-full bg-[#EDEDED] h-[6px] rounded-full overflow-hidden">
         <div 
           className={`h-full transition-all duration-[600ms] ease-out ${
             isPositive ? 'bg-accent-green' : 'bg-accent-coral'

@@ -14,7 +14,7 @@ export default function FlagsList({ flags }: FlagsListProps) {
       {flags.map((flag, idx) => (
         <div 
           key={idx} 
-          className="rounded-[4px] px-2.5 py-1 text-[11px] bg-[#1A1400] text-accent-amber border border-[rgba(255,184,0,0.2)] font-mono flex items-center gap-1.5 select-none hover:border-[rgba(255,184,0,0.4)] transition-colors duration-200"
+          className="rounded-[4px] px-2.5 py-1 text-[11px] bg-sun-soft text-accent-amber border border-[rgba(255,212,0,0.2)] font-mono flex items-center gap-1.5 select-none hover:border-[rgba(255,212,0,0.4)] transition-colors duration-200"
         >
           <span>⚠ {flag}</span>
         </div>
