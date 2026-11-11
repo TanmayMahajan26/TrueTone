@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import BackendStatusBanner from "@/components/BackendStatusBanner";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -33,6 +34,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-paper text-body-text">
         <Navbar />
+        <BackendStatusBanner />
         <main className="flex-1">
           <ErrorBoundary>
             {children}

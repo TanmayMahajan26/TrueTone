@@ -14,11 +14,28 @@ import {
   ModelsResponse,
 } from "./types";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// Strip trailing slashes so a URL pasted with "/" doesn't produce "//predict" (404).
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
 
 // ---------------------------------------------------------------------------
 // Error handling helpers
 // ---------------------------------------------------------------------------
+
+const SLEEPING_SERVER_MESSAGE =
+  "The server is waking up. It runs on a free hosting tier that sleeps after inactivity, so the first request can take 30 to 60 seconds. Please wait a minute and click Analyze again.";
+
+/**
+ * Ping GET /health. Returns true when the backend answers OK, false otherwise.
+ * Never throws. Used to wake a sleeping free-tier server and to detect when it is up.
+ */
+export async function pingBackend(): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_BASE}/health`, { cache: "no-store" });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Mapping from backend error codes to user-friendly messages.
@@ -46,6 +63,8 @@ function createUserError(
   }
   if (status === 413) return new Error(ERROR_CODE_MESSAGES.FILE_TOO_LARGE);
   if (status === 422) return new Error(ERROR_CODE_MESSAGES.VALIDATION_ERROR);
+  if (status === 502 || status === 503 || status === 504)
+    return new Error(SLEEPING_SERVER_MESSAGE);
   if (status >= 500)
     return new Error(ERROR_CODE_MESSAGES.INTERNAL_ERROR);
   if (status === 400 && detail) return new Error(detail);
@@ -98,7 +117,7 @@ async function retryWithBackoff<T>(
   // All retries exhausted. A browser reports a CORS block the same way as a dead
   // server, so name the likely causes instead of blaming the user's internet.
   throw new Error(
-    `Cannot reach the API at ${API_BASE}. Check that the backend is running and that it allows this site's origin (ALLOW_ORIGINS).`
+    `${SLEEPING_SERVER_MESSAGE} If it still fails after a few minutes, check that the backend at ${API_BASE} is running and allows this site's origin (ALLOW_ORIGINS).`
   );
 }
 
