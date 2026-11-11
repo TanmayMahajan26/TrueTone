@@ -107,6 +107,11 @@ TRANSFORMER_MODEL=/path/to/saved/model PYTHONPATH=. python -m uvicorn main:app -
 ```
 The model folder comes from `python -m experiments.run_experiment --save-model DIR` (see `backend/experiments/README.md`) and includes the calibration that makes its confidence meaningful. Without `TRANSFORMER_MODEL` the API serves the TF-IDF models only. Details are in `docs/api-reference.md`.
 
+### Deploying (quick path)
+* **Everything locally in containers:** `docker compose up --build` → UI on :3000, API docs on :8000/docs.
+* **Backend** (Railway / Render / any Docker host): deploy `backend/` using `backend/Dockerfile`. It honours `$PORT` and `WEB_CONCURRENCY`; health check is `/health`. Set `ALLOW_ORIGINS` to your frontend URL (see `backend/.env.example`).
+* **Frontend** (Vercel, root dir `frontend/`; or `frontend/Dockerfile`): set `NEXT_PUBLIC_API_URL` to the backend URL (see `frontend/.env.example`), then redeploy, since it is inlined at build time.
+
 ### Deploying to Cloud Run
 `deploy/cloudrun/Dockerfile` builds a single-worker image with CPU-only torch for Google Cloud Run (the Railway `backend/Dockerfile` is separate and unchanged). Build it with `backend/` as the context and set `TRANSFORMER_MODEL`, `ALLOW_ORIGINS` and the other variables listed in [docs/deployment-gcp.md](docs/deployment-gcp.md), which also covers redeploys and teardown. In the frontend host, set `NEXT_PUBLIC_API_URL` to the service URL without a trailing slash and redeploy.
 

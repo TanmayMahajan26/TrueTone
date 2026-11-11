@@ -1,0 +1,15 @@
+# Run everything: docker compose up --build
+# Frontend: http://localhost:3000   API docs: http://localhost:8000/docs
+services:
+  backend:
+    build: ./backend
+    environment:
+      ALLOW_ORIGINS: http://localhost:3000
+    ports: ["8000:8000"]
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports: ["3000:3000"]
+    depends_on: [backend]

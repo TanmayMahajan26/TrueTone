@@ -47,7 +47,9 @@ FROM python:3.12-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH" \
-    PYTHONPATH="/app"
+    PYTHONPATH="/app" \
+    PORT=8000 \
+    WEB_CONCURRENCY=2
 
 # Install runtime system dependencies (curl for health checks, tini for signal handling)
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -82,10 +84,11 @@ EXPOSE 8000
 
 # Health check endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:${PORT}/health || exit 1
 
 # Use tini as entrypoint for proper signal handling
 ENTRYPOINT ["tini", "--"]
 
 # Start the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+# Hosts like Railway/Render inject $PORT; WEB_CONCURRENCY sets the worker count.
+CMD ["sh", "-c", "exec uvicorn main:app --host 0.0.0.0 --port ${PORT} --workers ${WEB_CONCURRENCY}"]
